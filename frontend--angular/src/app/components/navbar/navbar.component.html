@@ -1,0 +1,15 @@
+<header class="navbar">
+  <div class="navbar__content">
+    <div class="navbar__logo">MyApp</div>
+
+    <nav class="navbar__links" [class.open]="menuOpen">
+      <a routerLink="/dashboard" routerLinkActive="active" (click)="menuOpen = false">Dashboard</a>
+      <a routerLink="/projects" routerLinkActive="active" (click)="menuOpen = false">Projects</a>
+      <button (click)="logout()">Logout</button>
+    </nav>
+
+    <button class="navbar__toggle" (click)="toggleMenu()">
+      ☰
+    </button>
+  </div>
+</header>

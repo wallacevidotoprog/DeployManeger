@@ -1,0 +1,16 @@
+<div class="container">
+  <h2>My Projects</h2>
+  <div class="sub-menu">
+    <button mat-raised-button color="primary"  (click)="showModal = true">Add Project</button>
+    <button mat-raised-button color="primary" routerLink="/projects/archived">Archived Projects</button>
+    <button mat-raised-button color="primary" routerLink="/projects/active">Active Projects</button>
+    <button mat-raised-button color="primary" routerLink="/projects/completed">Completed Projects</button>
+  </div>
+  <app-project-list/>
+  
+</div>
+<app-add-new-project
+  [visible]="showModal"
+  (close)="showModal = false"
+  (save)="salvarProjeto($event)"
+/>

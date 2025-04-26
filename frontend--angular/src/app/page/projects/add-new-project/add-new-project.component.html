@@ -1,0 +1,27 @@
+<div class="modal" *ngIf="visible">
+  <div class="modal-content">
+    <h2>Novo Projeto</h2>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+
+      <div class="input-wrapper">
+        <input formControlName="githubUrl" placeholder="https://github.com/user/repo" class="input" />
+        <button type="button" (click)="fetchRepo()" class="Subscribe-btn">GET</button>
+      </div>
+
+      <label>Nome</label>
+      <input formControlName="name" class="input" />
+
+      <label>Dono</label>
+      <input formControlName="owner" class="input" />
+
+      <label>git_url</label>
+      <input formControlName="git_url" class="input" />
+
+      <div class="actions">
+        <button type="button" (click)="close.emit()">Cancelar</button>
+        <button type="submit">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
