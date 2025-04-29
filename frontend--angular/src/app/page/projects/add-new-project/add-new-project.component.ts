@@ -1,16 +1,17 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { Github } from '../../../service/models/gitHub.model';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { GithubProfile, GithubRepository } from '../../../../models/gitHub.model';
+import { DeployService } from '../../../../service/deploy.service';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-add-new-project',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule,],
   templateUrl: './add-new-project.component.html',
-  styleUrls: ['./add-new-project.component.scss']
+  styleUrls: ['./add-new-project.component.scss'],
 })
 export class AddNewProjectComponent {
   @Input() visible = false;
@@ -19,47 +20,68 @@ export class AddNewProjectComponent {
 
   private fb = inject(FormBuilder);
   private http = inject(HttpClient);
+  private deployService = inject(DeployService);
+  protected tAlert = inject(NgToastService);
+  
 
-  form: FormGroup = this.fb.group({
-    githubUrl: [''],
-    name: [''],
-    description: [''],
-    owner: [''],
-    git_url: [''],
-  });
+  profile: string | null = null;
+  profileData: GithubProfile | null = null;
+  repositoryData: GithubRepository[] = [];
 
-  async fetchRepo() {
-    const url = this.form.value.githubUrl;
-    if (!url) return;
+  
 
-    const repoPath = this.extractRepoPath(url);
-    if (!repoPath) return;
-
-    try {
-      const data = await this.http.get<Github>(`https://api.github.com/repos/${repoPath}`).toPromise();
-      if (!data) {
-        alert('Repositório não encontrado!');
-      }
-      this.form.patchValue({
-        name: data?.name,
-        description: data?.description,
-        owner: data?.owner.login,
-        git_url: data?.git_url,
-      });
-    } catch (err) {
-      alert('Repositório não encontrado!');
+  onGetProfile() {
+    if (!this.profile) {
+      this.tAlert.success('Error', 'Please enter a GitHub profile');
+      return;
     }
+
+    this.http.get<GithubProfile>(`https://api.github.com/users/${this.profile}`).subscribe({
+      next: (data) => {
+        this.profileData = data;
+        this.onGetRepository(data);
+      },
+      error: (error) => {
+        this.tAlert.danger('Error', `Error fetching profile: ${error.error?.message || error.message}`,5000);
+      },
+    });
   }
 
-  extractRepoPath(url: string): string | null {
-    const match = url.match(/github\.com\/([^\/]+\/[^\/]+)/);
-    return match ? match[1] : null;
+  // Método modificado
+  onGetRepository(dataProfile: GithubProfile) {
+    this.http.get<GithubRepository[]>(`https://api.github.com/users/${dataProfile.login}/repos`).subscribe({
+      next: (data) => {
+        this.repositoryData = data;
+        this.tAlert.info('Repositories fetched', `Repositories for ${dataProfile.login} fetched successfully`,5000);
+      },
+      error: (error) => {
+        this.tAlert.danger('Error', `Error fetching repositories: ${error.error?.message || error.message}`,5000);
+      },
+    });
   }
 
-  submit() {
-    if (this.form.valid) {
-      this.save.emit(this.form.value);
-      this.close.emit();
-    }
+  // Método modificado com tipagem melhorada
+  selectRepository(repo: GithubRepository) {
+    if (!this.profileData) return;
+
+    const deployData = {
+      name: repo.name,
+      clone_url: repo.clone_url,
+      node_id: repo.node_id,
+      profile: this.profileData.login,
+      created_project: repo.created_at,
+      updated_project: repo.updated_at,
+    };
+
+    this.deployService.createDeploy(deployData).subscribe({
+      next: (response) => {
+        this.tAlert.success('Success', `Deployment created successfully for ${repo.name}`,5000);
+        this.save.emit(response);
+        this.close.emit();
+      },
+      error: (error) => {
+        this.tAlert.danger('Error', `Error creating deployment: ${error.error?.message || error.message}`,5000);
+      },
+    });
   }
 }

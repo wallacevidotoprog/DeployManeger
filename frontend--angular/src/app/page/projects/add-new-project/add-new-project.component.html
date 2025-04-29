@@ -1,27 +1,30 @@
 <div class="modal" *ngIf="visible">
+  <button type="button" (click)="close.emit()">X</button>
   <div class="modal-content">
-    <h2>Novo Projeto</h2>
+    <div class="modal-header">
+      <input type="text" name="profile" id="profile" [(ngModel)]="profile" placeholder="Enter GitHub Profile" />
+      <button type="button" (click)="onGetProfile()">Get Profile</button>
+    </div>
 
-    <form [formGroup]="form" (ngSubmit)="submit()">
-
-      <div class="input-wrapper">
-        <input formControlName="githubUrl" placeholder="https://github.com/user/repo" class="input" />
-        <button type="button" (click)="fetchRepo()" class="Subscribe-btn">GET</button>
+    <div class="profile" *ngIf="profileData">
+      <div class="profile-info">
+        <img *ngIf="profileData?.avatar_url" [src]="profileData.avatar_url" alt="Profile Image" />
+        <h3>{{ profileData.name }}</h3>
+        <p>{{ profileData.bio }}</p>
+        <p><strong>Followers:</strong> {{ profileData.followers }}</p>
+        <p><strong>Following:</strong> {{ profileData.following }}</p>
       </div>
 
-      <label>Nome</label>
-      <input formControlName="name" class="input" />
-
-      <label>Dono</label>
-      <input formControlName="owner" class="input" />
-
-      <label>git_url</label>
-      <input formControlName="git_url" class="input" />
-
-      <div class="actions">
-        <button type="button" (click)="close.emit()">Cancelar</button>
-        <button type="submit">Salvar</button>
+      <div>
+        <h4>Repositories</h4>
+        <div class="profile-repos" *ngIf="(repositoryData?.length ?? 0) > 0">
+          <ul>
+            <li *ngFor="let repo of repositoryData" (click)="selectRepository(repo)">
+              {{repo.language +' | '+  repo.name }}
+            </li>
+          </ul>
+        </div>
       </div>
-    </form>
+    </div>
   </div>
 </div>

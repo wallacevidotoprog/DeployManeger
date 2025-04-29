@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./db/dev.db"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(DEFAULT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Depoyment Depoyment[]
+}
+
+model Depoyment {
+  id         Int      @id @default(autoincrement())
+  status     String
+  project_id Int      @unique
+  user_id    Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user    User    @relation(fields: [user_id], references: [id])
+  project Project @relation(fields: [project_id], references: [id])
+}
+
+model Project {
+  id              Int      @id @default(autoincrement())
+  profile         String
+  node_id         String
+  name            String
+  clone_url       String
+  created_project DateTime
+  updated_project DateTime
+  pushed_project  DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  depoyment Depoyment?
+}
+
+enum Role {
+  ADMIN
+  USER
+  DEFAULT
+}
