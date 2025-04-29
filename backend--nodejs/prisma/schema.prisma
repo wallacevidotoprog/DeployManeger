@@ -22,7 +22,7 @@ model User {
 
 model Depoyment {
   id         Int      @id @default(autoincrement())
-  status     String
+  status     StatusDepoyment 
   project_id Int      @unique
   user_id    Int
   createdAt  DateTime @default(now())
@@ -51,4 +51,12 @@ enum Role {
   ADMIN
   USER
   DEFAULT
+}
+
+enum StatusDepoyment {
+  ONLINE
+  OFFLINE
+  BUILDING
+  PENDING
+  ERRO
 }

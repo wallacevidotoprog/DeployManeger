@@ -156,6 +156,14 @@ exports.Role = exports.$Enums.Role = {
   DEFAULT: 'DEFAULT'
 };
 
+exports.StatusDepoyment = exports.$Enums.StatusDepoyment = {
+  ONLINE: 'ONLINE',
+  OFFLINE: 'OFFLINE',
+  BUILDING: 'BUILDING',
+  PENDING: 'PENDING',
+  ERRO: 'ERRO'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Depoyment: 'Depoyment',

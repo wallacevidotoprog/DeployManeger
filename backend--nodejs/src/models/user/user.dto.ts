@@ -1,11 +1,8 @@
-export interface UserDtoCreate {  
-  // Fields for creating User
-}
+import { Partial } from "../../utils/resources";
+import { UserModel } from "./user.model";
 
-export interface UserDtoUpdate {  
-  // Fields for updating User
-}
+export class UserDtoCreate extends UserModel {}
 
-export interface UserDtoFindQuery {  
-  // Fields for querying User
-}
+export class UserDtoUpdate implements Partial<UserModel> {}
+
+export class UserDtoFindQuery implements Partial<UserModel> {}

@@ -18,6 +18,6 @@ export function validateDto<T>(type: ClassConstructor<T>): RequestHandler {
     }
 
     req.body = dto;
-    return next();
+    next();
   };
 }

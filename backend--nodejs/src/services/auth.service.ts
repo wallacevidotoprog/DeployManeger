@@ -37,6 +37,7 @@ class AuthService {
       .status(HttpStatus.OK)
       .json(ResponseApi.response({ message: "Login successful" }));
   }
+  
 }
 
 export default new AuthService();

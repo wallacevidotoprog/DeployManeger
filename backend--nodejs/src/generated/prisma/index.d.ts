@@ -41,11 +41,26 @@ export namespace $Enums {
 
 export type Role = (typeof Role)[keyof typeof Role]
 
+
+export const StatusDepoyment: {
+  ONLINE: 'ONLINE',
+  OFFLINE: 'OFFLINE',
+  BUILDING: 'BUILDING',
+  PENDING: 'PENDING',
+  ERRO: 'ERRO'
+};
+
+export type StatusDepoyment = (typeof StatusDepoyment)[keyof typeof StatusDepoyment]
+
 }
 
 export type Role = $Enums.Role
 
 export const Role: typeof $Enums.Role
+
+export type StatusDepoyment = $Enums.StatusDepoyment
+
+export const StatusDepoyment: typeof $Enums.StatusDepoyment
 
 /**
  * ##  Prisma Client ʲˢ
@@ -2253,7 +2268,7 @@ export namespace Prisma {
 
   export type DepoymentMinAggregateOutputType = {
     id: number | null
-    status: string | null
+    status: $Enums.StatusDepoyment | null
     project_id: number | null
     user_id: number | null
     createdAt: Date | null
@@ -2262,7 +2277,7 @@ export namespace Prisma {
 
   export type DepoymentMaxAggregateOutputType = {
     id: number | null
-    status: string | null
+    status: $Enums.StatusDepoyment | null
     project_id: number | null
     user_id: number | null
     createdAt: Date | null
@@ -2408,7 +2423,7 @@ export namespace Prisma {
 
   export type DepoymentGroupByOutputType = {
     id: number
-    status: string
+    status: $Enums.StatusDepoyment
     project_id: number
     user_id: number
     createdAt: Date
@@ -2498,7 +2513,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      status: string
+      status: $Enums.StatusDepoyment
       project_id: number
       user_id: number
       createdAt: Date
@@ -2929,7 +2944,7 @@ export namespace Prisma {
    */
   interface DepoymentFieldRefs {
     readonly id: FieldRef<"Depoyment", 'Int'>
-    readonly status: FieldRef<"Depoyment", 'String'>
+    readonly status: FieldRef<"Depoyment", 'StatusDepoyment'>
     readonly project_id: FieldRef<"Depoyment", 'Int'>
     readonly user_id: FieldRef<"Depoyment", 'Int'>
     readonly createdAt: FieldRef<"Depoyment", 'DateTime'>
@@ -4600,6 +4615,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'StatusDepoyment'
+   */
+  export type EnumStatusDepoymentFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatusDepoyment'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -4681,7 +4703,7 @@ export namespace Prisma {
     OR?: DepoymentWhereInput[]
     NOT?: DepoymentWhereInput | DepoymentWhereInput[]
     id?: IntFilter<"Depoyment"> | number
-    status?: StringFilter<"Depoyment"> | string
+    status?: EnumStatusDepoymentFilter<"Depoyment"> | $Enums.StatusDepoyment
     project_id?: IntFilter<"Depoyment"> | number
     user_id?: IntFilter<"Depoyment"> | number
     createdAt?: DateTimeFilter<"Depoyment"> | Date | string
@@ -4707,7 +4729,7 @@ export namespace Prisma {
     AND?: DepoymentWhereInput | DepoymentWhereInput[]
     OR?: DepoymentWhereInput[]
     NOT?: DepoymentWhereInput | DepoymentWhereInput[]
-    status?: StringFilter<"Depoyment"> | string
+    status?: EnumStatusDepoymentFilter<"Depoyment"> | $Enums.StatusDepoyment
     user_id?: IntFilter<"Depoyment"> | number
     createdAt?: DateTimeFilter<"Depoyment"> | Date | string
     updatedAt?: DateTimeFilter<"Depoyment"> | Date | string
@@ -4734,7 +4756,7 @@ export namespace Prisma {
     OR?: DepoymentScalarWhereWithAggregatesInput[]
     NOT?: DepoymentScalarWhereWithAggregatesInput | DepoymentScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Depoyment"> | number
-    status?: StringWithAggregatesFilter<"Depoyment"> | string
+    status?: EnumStatusDepoymentWithAggregatesFilter<"Depoyment"> | $Enums.StatusDepoyment
     project_id?: IntWithAggregatesFilter<"Depoyment"> | number
     user_id?: IntWithAggregatesFilter<"Depoyment"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Depoyment"> | Date | string
@@ -4895,7 +4917,7 @@ export namespace Prisma {
   }
 
   export type DepoymentCreateInput = {
-    status: string
+    status: $Enums.StatusDepoyment
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutDepoymentInput
@@ -4904,7 +4926,7 @@ export namespace Prisma {
 
   export type DepoymentUncheckedCreateInput = {
     id?: number
-    status: string
+    status: $Enums.StatusDepoyment
     project_id: number
     user_id: number
     createdAt?: Date | string
@@ -4912,7 +4934,7 @@ export namespace Prisma {
   }
 
   export type DepoymentUpdateInput = {
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumStatusDepoymentFieldUpdateOperationsInput | $Enums.StatusDepoyment
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutDepoymentNestedInput
@@ -4921,7 +4943,7 @@ export namespace Prisma {
 
   export type DepoymentUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumStatusDepoymentFieldUpdateOperationsInput | $Enums.StatusDepoyment
     project_id?: IntFieldUpdateOperationsInput | number
     user_id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4930,7 +4952,7 @@ export namespace Prisma {
 
   export type DepoymentCreateManyInput = {
     id?: number
-    status: string
+    status: $Enums.StatusDepoyment
     project_id: number
     user_id: number
     createdAt?: Date | string
@@ -4938,14 +4960,14 @@ export namespace Prisma {
   }
 
   export type DepoymentUpdateManyMutationInput = {
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumStatusDepoymentFieldUpdateOperationsInput | $Enums.StatusDepoyment
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DepoymentUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumStatusDepoymentFieldUpdateOperationsInput | $Enums.StatusDepoyment
     project_id?: IntFieldUpdateOperationsInput | number
     user_id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -5192,6 +5214,13 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type EnumStatusDepoymentFilter<$PrismaModel = never> = {
+    equals?: $Enums.StatusDepoyment | EnumStatusDepoymentFieldRefInput<$PrismaModel>
+    in?: $Enums.StatusDepoyment[]
+    notIn?: $Enums.StatusDepoyment[]
+    not?: NestedEnumStatusDepoymentFilter<$PrismaModel> | $Enums.StatusDepoyment
+  }
+
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
@@ -5239,6 +5268,16 @@ export namespace Prisma {
     id?: SortOrder
     project_id?: SortOrder
     user_id?: SortOrder
+  }
+
+  export type EnumStatusDepoymentWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.StatusDepoyment | EnumStatusDepoymentFieldRefInput<$PrismaModel>
+    in?: $Enums.StatusDepoyment[]
+    notIn?: $Enums.StatusDepoyment[]
+    not?: NestedEnumStatusDepoymentWithAggregatesFilter<$PrismaModel> | $Enums.StatusDepoyment
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumStatusDepoymentFilter<$PrismaModel>
+    _max?: NestedEnumStatusDepoymentFilter<$PrismaModel>
   }
 
   export type DepoymentNullableScalarRelationFilter = {
@@ -5365,6 +5404,10 @@ export namespace Prisma {
     create?: XOR<ProjectCreateWithoutDepoymentInput, ProjectUncheckedCreateWithoutDepoymentInput>
     connectOrCreate?: ProjectCreateOrConnectWithoutDepoymentInput
     connect?: ProjectWhereUniqueInput
+  }
+
+  export type EnumStatusDepoymentFieldUpdateOperationsInput = {
+    set?: $Enums.StatusDepoyment
   }
 
   export type UserUpdateOneRequiredWithoutDepoymentNestedInput = {
@@ -5526,8 +5569,25 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedEnumStatusDepoymentFilter<$PrismaModel = never> = {
+    equals?: $Enums.StatusDepoyment | EnumStatusDepoymentFieldRefInput<$PrismaModel>
+    in?: $Enums.StatusDepoyment[]
+    notIn?: $Enums.StatusDepoyment[]
+    not?: NestedEnumStatusDepoymentFilter<$PrismaModel> | $Enums.StatusDepoyment
+  }
+
+  export type NestedEnumStatusDepoymentWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.StatusDepoyment | EnumStatusDepoymentFieldRefInput<$PrismaModel>
+    in?: $Enums.StatusDepoyment[]
+    notIn?: $Enums.StatusDepoyment[]
+    not?: NestedEnumStatusDepoymentWithAggregatesFilter<$PrismaModel> | $Enums.StatusDepoyment
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumStatusDepoymentFilter<$PrismaModel>
+    _max?: NestedEnumStatusDepoymentFilter<$PrismaModel>
+  }
+
   export type DepoymentCreateWithoutUserInput = {
-    status: string
+    status: $Enums.StatusDepoyment
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutDepoymentInput
@@ -5535,7 +5595,7 @@ export namespace Prisma {
 
   export type DepoymentUncheckedCreateWithoutUserInput = {
     id?: number
-    status: string
+    status: $Enums.StatusDepoyment
     project_id: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -5571,7 +5631,7 @@ export namespace Prisma {
     OR?: DepoymentScalarWhereInput[]
     NOT?: DepoymentScalarWhereInput | DepoymentScalarWhereInput[]
     id?: IntFilter<"Depoyment"> | number
-    status?: StringFilter<"Depoyment"> | string
+    status?: EnumStatusDepoymentFilter<"Depoyment"> | $Enums.StatusDepoyment
     project_id?: IntFilter<"Depoyment"> | number
     user_id?: IntFilter<"Depoyment"> | number
     createdAt?: DateTimeFilter<"Depoyment"> | Date | string
@@ -5699,7 +5759,7 @@ export namespace Prisma {
   }
 
   export type DepoymentCreateWithoutProjectInput = {
-    status: string
+    status: $Enums.StatusDepoyment
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutDepoymentInput
@@ -5707,7 +5767,7 @@ export namespace Prisma {
 
   export type DepoymentUncheckedCreateWithoutProjectInput = {
     id?: number
-    status: string
+    status: $Enums.StatusDepoyment
     user_id: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -5730,7 +5790,7 @@ export namespace Prisma {
   }
 
   export type DepoymentUpdateWithoutProjectInput = {
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumStatusDepoymentFieldUpdateOperationsInput | $Enums.StatusDepoyment
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutDepoymentNestedInput
@@ -5738,7 +5798,7 @@ export namespace Prisma {
 
   export type DepoymentUncheckedUpdateWithoutProjectInput = {
     id?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumStatusDepoymentFieldUpdateOperationsInput | $Enums.StatusDepoyment
     user_id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -5746,14 +5806,14 @@ export namespace Prisma {
 
   export type DepoymentCreateManyUserInput = {
     id?: number
-    status: string
+    status: $Enums.StatusDepoyment
     project_id: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type DepoymentUpdateWithoutUserInput = {
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumStatusDepoymentFieldUpdateOperationsInput | $Enums.StatusDepoyment
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutDepoymentNestedInput
@@ -5761,7 +5821,7 @@ export namespace Prisma {
 
   export type DepoymentUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumStatusDepoymentFieldUpdateOperationsInput | $Enums.StatusDepoyment
     project_id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -5769,7 +5829,7 @@ export namespace Prisma {
 
   export type DepoymentUncheckedUpdateManyWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumStatusDepoymentFieldUpdateOperationsInput | $Enums.StatusDepoyment
     project_id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

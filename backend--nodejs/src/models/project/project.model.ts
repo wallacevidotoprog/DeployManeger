@@ -1,7 +1,7 @@
-import { IsDate, IsDateString, IsNumber, IsString, IsUrl } from "class-validator";
-import { DBBase } from "../../database.model";
+import { IsDateString, IsString, IsUrl } from "class-validator";
+import { DBBase } from "../database.model";
 
-export class DeployModel extends DBBase {
+export class ProjectModel extends DBBase {
   @IsString()
   profile!: string;
 
