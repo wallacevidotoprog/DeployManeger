@@ -8,11 +8,7 @@ import { verifyToken } from "../utils/token";
 export function authMiddleware(req: Request, res: Response, next: NextFunction) {
   try {
     const token = req.cookies.Auth;
-
-    console.log('req.cookies',token);
-    
-
-    if (!token) {
+     if (!token) {
       res.status(HttpStatus.UNAUTHORIZED).json(ResponseApi.response({ message: "Unauthorized: No token provided." }));
       return
     }

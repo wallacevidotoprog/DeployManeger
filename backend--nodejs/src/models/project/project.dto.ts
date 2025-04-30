@@ -1,14 +1,16 @@
-import { IsDateString, IsString, IsUrl } from "class-validator";
+import { IsDate, IsDateString, IsString, IsUrl } from "class-validator";
 import { Partial } from "../../utils/resources";
 import { DBBaseValidator } from "../database.model";
 import { ProjectModel } from "./project.model";
+import { Transform } from "class-transformer";
 
 export class ProjectValidator extends DBBaseValidator {
+
   @IsString()
   profile!: string;
 
   @IsString()
-  node_id!: number;
+  node_id!: string;
 
   @IsString()
   name!: string;
@@ -16,12 +18,14 @@ export class ProjectValidator extends DBBaseValidator {
   @IsUrl()
   clone_url!: string;
 
-  @IsDateString()
+  @IsDate()
+  @Transform(({value }) => new Date(value))
   created_project!: Date;
 
-  @IsDateString()
+  @IsDate()
+  @Transform(({value }) => new Date(value))
   updated_project!: Date;
-}
+} 
 
 export interface ProjectDtoCreate extends  Omit<ProjectModel,'id'|'createAt'|'updateAt'> {}
 

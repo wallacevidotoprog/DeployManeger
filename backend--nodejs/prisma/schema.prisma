@@ -15,12 +15,13 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Depoyment Depoyment[]
+  Depoyment Deployment[]
 }
 
-model Depoyment {
+model Deployment {
   id         Int             @id @default(autoincrement())
   status     StatusDepoyment
+  path String
   project_id Int             @unique
   user_id    Int
   createdAt  DateTime        @default(now())
@@ -38,11 +39,11 @@ model Project {
   clone_url       String
   created_project DateTime
   updated_project DateTime
-  pushed_project  DateTime
+
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  depoyment Depoyment?
+  depoyment Deployment?
 }
 
 enum RoleUser {

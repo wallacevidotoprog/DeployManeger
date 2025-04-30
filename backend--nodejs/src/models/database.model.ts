@@ -1,9 +1,9 @@
 import { IsDate, IsNumber, IsOptional } from "class-validator";
 
 export interface DBBase {
-  id: number;
-  createdAt: Date;
-  updatedAt: Date;
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export abstract class DBBaseValidator {

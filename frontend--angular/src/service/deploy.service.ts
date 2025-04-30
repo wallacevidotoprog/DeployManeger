@@ -14,7 +14,7 @@ export class DeployService {
 
   createDeploy(data_deploy: GithubDeploy): Observable<ResponseApi> {
     return this.http
-      .post<ResponseApi>(`${environment.apiUrl}deploy/import`, data_deploy, {
+      .post<ResponseApi>(`${environment.apiUrl}project/import`, data_deploy, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
