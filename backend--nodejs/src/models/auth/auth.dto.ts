@@ -1,11 +1,13 @@
-export interface AuthDtoCreate {  
-  // Fields for creating Auth
+import { IsEmail, IsString, MinLength } from "class-validator";
+import { AuthModel } from "./auth.model";
+
+export class AuthValidator {
+  @IsEmail()
+  email!: string;
+
+  @IsString()
+  @MinLength(6)
+  password!: string;
 }
 
-export interface AuthDtoUpdate {  
-  // Fields for updating Auth
-}
-
-export interface AuthDtoFindQuery {  
-  // Fields for querying Auth
-}
+export interface AuthDto extends AuthModel {}

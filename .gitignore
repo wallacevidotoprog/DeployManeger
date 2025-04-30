@@ -6,7 +6,7 @@ frontend--angular/node_modules
 dist
 backup-public
 /backend--nodejs/src/generated
-backend--nodejs/src/generated/
+generated
 
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 

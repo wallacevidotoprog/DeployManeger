@@ -1,8 +1,22 @@
+import { StatusDepoyment } from "@prisma/client";
+import { IsEnum, IsNumber } from "class-validator";
 import { Partial } from "../../utils/resources";
-import { ProjectModel } from "../project/project.model";
+import { DBBaseValidator } from "../database.model";
+import { DepoymentModel } from "./depoyment.model";
 
-export class DepoymentDtoCreate extends ProjectModel {}
+export class DepoymentValidator extends DBBaseValidator {
+  @IsEnum(StatusDepoyment)
+  status!: string;
 
-export class DepoymentDtoUpdate implements Partial<ProjectModel> {}
+  @IsNumber()
+  project_id!: number;
 
-export class DepoymentDtoFindQuery implements Partial<ProjectModel> {}
+  @IsNumber()
+  user_id!: number;
+}
+
+export interface DepoymentDtoCreate extends Omit<DepoymentModel,'id'|'createAt'|'updateAt'> {}
+
+export interface DepoymentDtoUpdate extends Partial<DepoymentDtoCreate> {}
+
+export interface DepoymentDtoFindQuery extends Partial<DepoymentModel> {}

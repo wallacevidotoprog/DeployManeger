@@ -1,31 +1,28 @@
-import { compareSync } from "bcryptjs";
-import { plainToInstance } from "class-transformer";
-import { validate } from "class-validator";
+import { PrismaClient } from "@prisma/client";
+import { compareSync } from "bcrypt";
 import { Request, Response } from "express";
-import { PrismaClient } from "../generated/prisma";
 import { AuthModel } from "../models/auth/auth.model";
+import { UserToken } from "../models/user/user.dto";
 import { HttpStatus } from "../utils/HttpStatus";
 import { ResponseApi } from "../utils/response-api";
 import { generateToken } from "../utils/token";
 
 class AuthService {
-  constructor(private prisma = new PrismaClient()) {}
+  constructor(private prisma = new PrismaClient()) {
+    this.auth = this.auth.bind(this);
+  }
 
   async auth(req: Request, res: Response): Promise<void> {
-    const loginDto = plainToInstance(AuthModel, req.body);
-
-    const errors = await validate(loginDto);
-    if (errors.length > 0) {
-      res.status(400).json(errors);
-    }
+    const loginDto: AuthModel = req.body;
 
     const user = await this.prisma.user.findFirst({ where: { email: loginDto.email } });
 
     if (!user || !compareSync(loginDto.password, user.password)) {
-      res.status(HttpStatus.UNAUTHORIZED).json();
+      res.status(HttpStatus.BAD_REQUEST).json();
+      return;
     }
 
-    const token = generateToken({ id: user?.id, email: user?.email });
+    const token = generateToken({ id: user?.id, email: user?.email, role: user.role } );
 
     res
       .cookie("Auth", token, {
@@ -37,7 +34,12 @@ class AuthService {
       .status(HttpStatus.OK)
       .json(ResponseApi.response({ message: "Login successful" }));
   }
-  
+  async logoff(req: Request, res: Response): Promise<void> {
+    res.clearCookie("Auth", {
+      httpOnly: true,
+      secure: false, // Em produção: true (HTTPS)
+    });
+  }
 }
 
 export default new AuthService();
