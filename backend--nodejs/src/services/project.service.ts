@@ -6,6 +6,7 @@ import { HttpStatus } from "../utils/HttpStatus";
 import { ResponseApi } from "../utils/response-api";
 import { ReturnGitClone } from "../utils/returtGihub";
 import { GitHubService } from "./github.service";
+import { PM2Manager } from "./pm2.service";
 
 class ProjectService {
   constructor(private prisma = new PrismaClient()) {}
@@ -82,6 +83,84 @@ class ProjectService {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
         ResponseApi.response({
           message: (error as Error)?.message || "Erro desconhecido",
+        })
+      );
+    }
+  }
+
+  async processList(req: Request, res: Response): Promise<void> {
+    try {
+      const processes = await PM2Manager.listProcesses();
+      res.status(HttpStatus.OK).json(
+        ResponseApi.response({
+          data: processes,
+        })
+      );
+    } catch (error) {
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
+        ResponseApi.response({
+          data: error,
+        })
+      );
+    }
+  }
+  async createProcess(req: Request, res: Response): Promise<void> {
+    const { name, scriptPath } = req.body;
+
+    if (!name || !scriptPath) {
+      res.status(HttpStatus.BAD_REQUEST).json(
+        ResponseApi.response({
+          message: "Name and scriptPath are required.",
+        })
+      );
+    }
+
+    try {
+      const result = await PM2Manager.createProcess(name, scriptPath);
+
+      res.status(HttpStatus.OK).json(
+        ResponseApi.response({
+          data: result,
+        })
+      );
+    } catch (error) {
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
+        ResponseApi.response({
+          data: error,
+        })
+      );
+    }
+  }
+
+  async startProcess(req: Request, res: Response): Promise<void> {
+    try {
+
+      const result = await PM2Manager.startProcess(name);
+      res.status(HttpStatus.OK).json(
+        ResponseApi.response({
+          data: result,
+        })
+      );
+    } catch (error) {
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
+        ResponseApi.response({
+          data: error,
+        })
+      );
+    }
+  }
+  async stopProcess(req: Request, res: Response): Promise<void> {
+    try {
+      const result = await PM2Manager.stopProcess(name);
+      res.status(HttpStatus.OK).json(
+        ResponseApi.response({
+          data: result,
+        })
+      );
+    } catch (error) {
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
+        ResponseApi.response({
+          data: error,
         })
       );
     }

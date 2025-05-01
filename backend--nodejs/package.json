@@ -6,7 +6,8 @@
     "dev": "tsx src/index.ts",
     "build": "rimraf dist dist && tsc",
     "start": "node dist/app.js",
-    "watch": "ts-node-dev --respawn --transpile-only src/app.ts"
+    "watch": "ts-node-dev --respawn --transpile-only src/app.ts",
+    "bp": "pm2 stop app && npm run build && pm2 start app && pm2 logs app"
   },
   "keywords": [],
   "author": "",
