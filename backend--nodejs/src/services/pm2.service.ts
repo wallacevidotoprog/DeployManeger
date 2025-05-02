@@ -28,6 +28,7 @@ export class PM2Manager {
     }
   }
 
+  // criar o process .js/.ts
   static async createProcess(name: string, prisma: PrismaClient) {
     try {
       const verify = (await this.getFindProcess(name)) as ProcessModel;
