@@ -1,11 +1,11 @@
-import { StatusDepoyment } from "@prisma/client";
 import { IsEnum, IsNumber } from "class-validator";
 import { Partial } from "../../utils/resources";
 import { DBBaseValidator } from "../database.model";
 import { DepoymentModel } from "./depoyment.model";
+import { StatusDeployment } from "@prisma/client";
 
 export class DepoymentValidator extends DBBaseValidator {
-  @IsEnum(StatusDepoyment)
+  @IsEnum(StatusDeployment)
   status!: string;
 
   @IsNumber()
@@ -15,7 +15,7 @@ export class DepoymentValidator extends DBBaseValidator {
   user_id!: number;
 }
 
-export interface DepoymentDtoCreate extends Omit<DepoymentModel,'id'|'createAt'|'updateAt'> {}
+export interface DepoymentDtoCreate extends Omit<DepoymentModel, "id" | "createAt" | "updateAt"> {}
 
 export interface DepoymentDtoUpdate extends Partial<DepoymentDtoCreate> {}
 

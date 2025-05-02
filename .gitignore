@@ -5,11 +5,10 @@ frontend--angular/node_modules
 .angular
 dist
 backup-public
-/backend--nodejs/src/generated
-generated
-/backend--nodejs/db/
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
-
+DEPLOY
+/DEPLOY
+backend--nodejs/DEPLOY
 # Compiled output
 /dist
 /tmp
@@ -51,3 +50,4 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+backend--nodejs/DEPLOY/*
