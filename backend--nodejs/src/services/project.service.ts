@@ -134,7 +134,15 @@ class ProjectService {
 
   async startProcess(req: Request, res: Response): Promise<void> {
     try {
+      const { name } = req.body;
 
+      if (!name) {
+        res.status(HttpStatus.BAD_REQUEST).json(
+          ResponseApi.response({
+            message: "Name and scriptPath are required.",
+          })
+        );
+      }
       const result = await PM2Manager.startProcess(name);
       res.status(HttpStatus.OK).json(
         ResponseApi.response({
@@ -151,6 +159,16 @@ class ProjectService {
   }
   async stopProcess(req: Request, res: Response): Promise<void> {
     try {
+      const { name } = req.body;
+
+      if (!name) {
+        res.status(HttpStatus.BAD_REQUEST).json(
+          ResponseApi.response({
+            message: "Name and scriptPath are required.",
+          })
+        );
+      }
+
       const result = await PM2Manager.stopProcess(name);
       res.status(HttpStatus.OK).json(
         ResponseApi.response({

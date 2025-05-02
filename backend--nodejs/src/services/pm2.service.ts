@@ -34,7 +34,9 @@ if (stderr) throw new Error(stderr);
     static async createProcess(name: string, scriptPath: string) {
         try {
             const { stdout } = await execAsync(`pm2 start ${scriptPath} --name ${name}`);
-            return { success: true, message: stdout };
+
+            const processes = JSON.parse(stdout);
+            return processes;
         } catch (error) {
             throw new Error(`Erro ao iniciar processo: ${error}`);
         }
@@ -42,7 +44,8 @@ if (stderr) throw new Error(stderr);
     static async startProcess(name: string) {
         try {
             const { stdout } = await execAsync(`pm2 start ${name}`);
-            return stdout;
+            const processes = JSON.parse(stdout);
+            return processes;
         } catch (error) {
             throw new Error(`Erro ao iniciar processo: ${error}`);
         }
@@ -51,7 +54,8 @@ if (stderr) throw new Error(stderr);
     static async stopProcess(name: string) {
         try {
             const { stdout } = await execAsync(`pm2 stop ${name}`);
-            return stdout;
+            const processes = JSON.parse(stdout);
+            return processes;
         } catch (error) {
             throw new Error(`Erro ao iniciar processo: ${error}`);
         }
