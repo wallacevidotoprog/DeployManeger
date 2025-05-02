@@ -1,5 +1,5 @@
 node_modules
-backend/node_modules
+backend--nodejs/node_modules
 frontend--angular/node_modules
 .env
 .angular
@@ -7,7 +7,7 @@ dist
 backup-public
 /backend--nodejs/src/generated
 generated
-
+/backend--nodejs/db/
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
 # Compiled output
