@@ -11,6 +11,8 @@ import { PM2Manager } from "./pm2.service";
 class ProjectService {
   constructor(private prisma = new PrismaClient()) {}
 
+  private deployDir = process.env.FILE_DEPLOY ?? "../DEPLOY";
+
   //implementar rollback
   async registerProject(req: Request, res: Response): Promise<void> {
     try {
@@ -69,8 +71,15 @@ class ProjectService {
 
   async pathList(req: Request, res: Response): Promise<void> {
     try {
+      if (fs.existsSync(this.deployDir)) {
+        res.status(HttpStatus.NOT_FOUND).json(
+          ResponseApi.response({
+            message: "Empty folder",
+          })
+        );
+      }
       const itens = await fs
-        .readdirSync("./DEPLOY", { withFileTypes: true })
+        .readdirSync(this.deployDir, { withFileTypes: true })
         .filter((item) => item.isDirectory)
         .map((item) => item.name);
 
@@ -104,6 +113,7 @@ class ProjectService {
       );
     }
   }
+
   async createProcess(req: Request, res: Response): Promise<void> {
     const { name, scriptPath } = req.body;
 

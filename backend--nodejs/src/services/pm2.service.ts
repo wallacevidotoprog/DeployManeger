@@ -6,11 +6,7 @@ const execAsync = promisify(exec);
 export class PM2Manager {
     static async listProcesses() {
         try {
-            // ubuntu 
             const { stdout, stderr } = await execAsync('pm2 jlist');
-            // const { stdout, stderr } = await execAsync(
-            //     `"C:\\Users\\walla\\AppData\\Roaming\\npm\\pm2.cmd" jlist`
-            // );
             
 if (stderr) throw new Error(stderr);
             const processes = JSON.parse(stdout);

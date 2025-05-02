@@ -9,10 +9,10 @@ const routerProject = Router();
 
 routerProject.post("/import", authMiddleware, validateDto(ProjectValidator), ProjectService.registerProject.bind(ProjectService));
 
-routerProject.post("/path_list", authMiddleware, ProjectService.pathList.bind(ProjectService));
+routerProject.get("/path_list", authMiddleware, ProjectService.pathList.bind(ProjectService));
 
 
-routerProject.get('/processes', authMiddleware, ProjectService.pathList.bind(ProjectService));
+routerProject.get('/processes', authMiddleware, ProjectService.processList.bind(ProjectService));
 
 routerProject.post('/processes', authMiddleware, ProjectService.createProcess.bind(ProjectService));
 
