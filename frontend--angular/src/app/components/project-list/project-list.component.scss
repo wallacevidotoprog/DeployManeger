@@ -1,12 +1,177 @@
-table {
+/* process-table.component.css */
+.processes-dashboard {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-title {
+  color: #2c3e50;
+  margin: 0;
+}
+
+.refresh-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.table-container {
+  background: white;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.wide-process-table {
   width: 100%;
+  border-collapse: collapse;
 }
-.online {
-  color: green;
+
+.wide-process-table th {
+  background-color: #34495e;
+  color: white;
+  padding: 1rem;
+  text-align: left;
 }
-.offline {
-  color: red;
+
+.wide-process-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
 }
-.building {
-  color: orange;
+
+/* STATUS BADGES - Versão corrigida */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 80px;
+  text-align: center;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Cores dos status */
+.status-badge.online {
+  background-color: #00ff77;
+  color: #000000;
+  border: 1px solid #c3e6cb;
+}
+
+.status-badge.stopped {
+  background-color: #ff6600;
+  color: #000000;
+  border: 1px solid #d6d8db;
+}
+
+.status-badge.errored {
+  background-color: #000000;
+  color: #dc3545;
+  border: 1px solid #f5c6cb;
+}
+
+.status-badge.pending {
+  background-color: #ffc107;
+  color: #000000;
+  border: 1px solid #ffeeba;
+}
+
+.status-badge.building {
+  background-color: #e6f3ff;
+  color: #007bff;
+  border: 1px solid #b8daff;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { opacity: 0.8; }
+}
+
+
+.resource-bar {
+  position: relative;
+  height: 24px;
+  background-color: #000000;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.resource-bar div {
+  position: absolute;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.cpu-bar {
+  background-color: #17a2b8;
+}
+
+.memory-bar {
+  background-color: #6f42c1;
+}
+
+.resource-bar span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.75rem;
+  color: white;
+  text-shadow: 0 0 2px rgba(0,0,0,0.5);
+}
+
+.config-button, .restart-button, .admin-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-right: 0.5rem;
+  padding: 0.25rem;
+}
+
+.config-button {
+  color: #6c757d;
+}
+
+.restart-button {
+  color: #28a745;
+}
+
+.admin-button {
+  color: #dc3545;
+}
+
+.loading-spinner {
+  padding: 2rem;
+  text-align: center;
+  color: #6c757d;
+}
+
+.no-data {
+  padding: 2rem;
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
 }

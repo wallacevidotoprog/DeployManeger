@@ -1,25 +1,38 @@
 <div class="modal" *ngIf="visible">
-  <button type="button" (click)="close.emit()">X</button>
   <div class="modal-content">
+    <div class="btn-close" (click)="close.emit()">✕</div>
+    
+    <!-- Título adicionado aqui -->
+    <h2 class="page-title">GitHub Profile Explorer</h2>
+
     <div class="modal-header">
-      <input type="text" name="profile" id="profile" [(ngModel)]="profile" placeholder="Enter GitHub Profile" />
-      <button type="button" (click)="onGetProfile()">Get Profile</button>
+      <input 
+        type="text" 
+        name="profile" 
+        id="profile" 
+        [(ngModel)]="profile" 
+        placeholder="Enter GitHub Profile"
+        class="search-input"
+      />
+      <button type="button" (click)="onGetProfile()" class="search-button">Get Profile</button>
     </div>
 
     <div class="profile" *ngIf="profileData">
       <div class="profile-info">
-        <img *ngIf="profileData?.avatar_url" [src]="profileData.avatar_url" alt="Profile Image" />
+        <img *ngIf="profileData?.avatar_url" [src]="profileData.avatar_url" alt="Profile Image" class="avatar" />
         <h3>{{ profileData.name }}</h3>
-        <p>{{ profileData.bio }}</p>
-        <p><strong>Followers:</strong> {{ profileData.followers }}</p>
-        <p><strong>Following:</strong> {{ profileData.following }}</p>
+        <p class="bio">{{ profileData.bio }}</p>
+        <div class="stats">
+          <p><span class="stat-label">Followers:</span> <span class="stat-value">{{ profileData.followers }}</span></p>
+          <p><span class="stat-label">Following:</span> <span class="stat-value">{{ profileData.following }}</span></p>
+        </div>
       </div>
 
-      <div>
+      <div class="repos-section">
         <h4>Repositories</h4>
-        <div class="profile-repos" *ngIf="(repositoryData?.length ?? 0) > 0">
-          <ul>
-            <li *ngFor="let repo of repositoryData" (click)="selectRepository(repo)">
+        <div class="repos-container" *ngIf="(repositoryData?.length ?? 0) > 0">
+          <ul class="repo-list">
+            <li *ngFor="let repo of repositoryData" (click)="selectRepository(repo)" class="repo-item">
               {{repo.language +' | '+  repo.name }}
             </li>
           </ul>

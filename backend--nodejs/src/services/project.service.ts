@@ -2,6 +2,7 @@ import { PrismaClient, StatusDeployment } from "@prisma/client";
 import dotenv from "dotenv";
 import { Request, Response } from "express";
 import fs from "fs";
+import { ProcessModal } from "../@types/process.types";
 import { ProjectDtoCreate } from "../models/project/project.dto";
 import { HttpStatus } from "../utils/HttpStatus";
 import { ResponseApi } from "../utils/response-api";
@@ -79,7 +80,7 @@ class ProjectService {
             message: "Empty folder",
           })
         );
-        return
+        return;
       }
       const itens = await fs
         .readdirSync(this.deployDir, { withFileTypes: true })
@@ -103,15 +104,24 @@ class ProjectService {
   async processList(req: Request, res: Response): Promise<void> {
     try {
       const processes = await PM2Manager.listProcesses();
+      const db = await this.prisma.project.findMany({ include: { deployment: true } });
+
+      const result = db.map((data) => {
+        return {
+          process: processes.find((x) => x.name === data.node_id),
+          db: data,
+        } as ProcessModal;
+      });
+
       res.status(HttpStatus.OK).json(
         ResponseApi.response({
-          data: processes,
+          data: result,
         })
       );
     } catch (error) {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
         ResponseApi.response({
-           message: (error as Error).message,
+          message: (error as Error).message,
         })
       );
     }
@@ -126,7 +136,7 @@ class ProjectService {
           message: "Name and scriptPath are required.",
         })
       );
-      return
+      return;
     }
 
     try {
@@ -140,7 +150,7 @@ class ProjectService {
     } catch (error) {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
         ResponseApi.response({
-           message: (error as Error).message,
+          message: (error as Error).message,
         })
       );
     }
@@ -156,9 +166,9 @@ class ProjectService {
             message: "Name and scriptPath are required.",
           })
         );
-        return
+        return;
       }
-      const result = await PM2Manager.startProcess(name,this.prisma);
+      const result = await PM2Manager.startProcess(name, this.prisma);
       res.status(HttpStatus.OK).json(
         ResponseApi.response({
           data: result,
@@ -167,7 +177,7 @@ class ProjectService {
     } catch (error) {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
         ResponseApi.response({
-           message: (error as Error).message,
+          message: (error as Error).message,
         })
       );
     }
@@ -183,10 +193,10 @@ class ProjectService {
             message: "Name and scriptPath are required.",
           })
         );
-        return
+        return;
       }
 
-      const result = await PM2Manager.stopProcess(name,this.prisma);
+      const result = await PM2Manager.stopProcess(name, this.prisma);
       res.status(HttpStatus.OK).json(
         ResponseApi.response({
           data: result,
@@ -195,7 +205,7 @@ class ProjectService {
     } catch (error) {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
         ResponseApi.response({
-           message: (error as Error).message,
+          message: (error as Error).message,
         })
       );
     }
@@ -211,10 +221,10 @@ class ProjectService {
             message: "Name and scriptPath are required.",
           })
         );
-        return
+        return;
       }
 
-      const result = await PM2Manager.deleteProcess(name,this.prisma);
+      const result = await PM2Manager.deleteProcess(name, this.prisma);
       res.status(HttpStatus.OK).json(
         ResponseApi.response({
           data: result,
@@ -223,7 +233,7 @@ class ProjectService {
     } catch (error) {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
         ResponseApi.response({
-           message: (error as Error).message,
+          message: (error as Error).message,
         })
       );
     }

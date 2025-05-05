@@ -1,20 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, map, Observable, of } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { HttpStatus } from '../../../backend--nodejs/src/utils/HttpStatus';
 import { environment } from '../environments/environment';
 import { AuthLogin } from '../types/auth';
 import { ResponseApi } from '../types/response.type';
+import { ProcessModal } from '../types/process.types';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class ProjectService {
   private http = inject(HttpClient);
 
-  authLogin(data: AuthLogin): Observable<ResponseApi> {
+  getAllProject(): Observable<ResponseApi> {
     return this.http
-      .post<ResponseApi>(`${environment.apiUrl}auth/login`, data, {
+      .get<ResponseApi>(`${environment.apiUrl}project/processes`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -27,7 +28,7 @@ export class AuthService {
           if (response.status === HttpStatus.OK) {
             return {
               status: response.status,
-              message: 'Deploy created successfully',
+              data: response.body?.data
             } as ResponseApi;
           } else {
             const errorMessage = response.body as ResponseApi;
@@ -39,20 +40,4 @@ export class AuthService {
         })
       );
   }
-
-  me(): Observable<boolean> {
-    return this.http
-      .get<ResponseApi>(`${environment.apiUrl}auth/me`, {
-        withCredentials: true,
-        observe: 'response'
-      })
-      .pipe(
-        map(response => {          
-          return response.status === HttpStatus.OK
-        }),
-        catchError(error => {
-          console.error('Error in auth/me request:', error);
-          return of(false); 
-        })
-      );
-  }}
+}

@@ -1,5 +1,6 @@
-import { StatusDeployment } from "@prisma/client";
-import { ProjectModel } from "../models/project/project.model";
+import { StatusDeployment } from "../enum/db.enum";
+import { ProjectModel } from "../models/db.modal";
+
 
 export type ProcessPM2 = {
   id: number;

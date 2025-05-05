@@ -1,7 +1,7 @@
 import { PrismaClient, StatusDeployment } from "@prisma/client";
 import { exec } from "child_process";
 import { promisify } from "util";
-import { ProcessModel } from "../@types/process.types";
+import { ProcessPM2 } from "../@types/process.types";
 
 const execAsync = promisify(exec);
 
@@ -12,14 +12,14 @@ export class PM2Manager {
 
       if (stderr) throw new Error(stderr);
       const processes = JSON.parse(stdout);
-      const simplifiedProcesses: ProcessModel[] = processes.map((proc: any) => ({
+      const simplifiedProcesses: ProcessPM2[] = processes.map((proc: any) => ({
         id: proc.pm_id,
         name: proc.name,
         status: proc.pm2_env.status, // online, stopped, errored
         uptime: proc.pm2_env.uptime,
         cpu: proc.monit.cpu,
         memory: proc.monit.memory,
-      })) as ProcessModel[];
+      })) as ProcessPM2[];
 
       return simplifiedProcesses;
     } catch (error) {
@@ -31,7 +31,7 @@ export class PM2Manager {
   // criar o process .js/.ts
   static async createProcess(name: string, prisma: PrismaClient) {
     try {
-      const verify = (await this.getFindProcess(name)) as ProcessModel;
+      const verify = (await this.getFindProcess(name)) as ProcessPM2;
 
       if (verify) {
         throw new Error("The process is already instantiated");
@@ -50,7 +50,7 @@ export class PM2Manager {
       const { stdout, stderr } = await execAsync(`pm2 start ${result.path} --name ${result.name}`);
       if (stderr) throw new Error(stderr);
 
-      const tempPm2: ProcessModel = (await this.getFindProcess(result.name)) as ProcessModel;
+      const tempPm2: ProcessPM2 = (await this.getFindProcess(result.name)) as ProcessPM2;
       if (tempPm2) {
         const t = await prisma.deployment.count({ where: { id: ps?.deployment?.id } });
 
@@ -73,14 +73,14 @@ export class PM2Manager {
     try {
       const result = await this.getNameProcess(name, prisma);
 
-      const verify = (await this.getFindProcess(result?.node_id)) as ProcessModel;
+      const verify = (await this.getFindProcess(result?.node_id)) as ProcessPM2;
 
       if (verify) {
         throw new Error("The process is already instantiated");
       }
       const { stdout, stderr } = await execAsync(`pm2 start ${result?.node_id}`);
       if (stderr) throw new Error(stderr);
-      const ps: ProcessModel = (await this.getFindProcess(result?.node_id)) as ProcessModel;
+      const ps: ProcessPM2 = (await this.getFindProcess(result?.node_id)) as ProcessPM2;
 
       //@ts-ignore
       await this.setStatusProcess(result.deployment.id, ps.status, prisma);
@@ -95,7 +95,7 @@ export class PM2Manager {
     try {
       const result = await this.getNameProcess(name, prisma);
 
-      const verify = (await this.getFindProcess(result?.node_id)) as ProcessModel;
+      const verify = (await this.getFindProcess(result?.node_id)) as ProcessPM2;
 
       if (verify) {
         throw new Error("The process is already instantiated");
@@ -103,7 +103,7 @@ export class PM2Manager {
 
       const { stdout, stderr } = await execAsync(`pm2 stop ${result?.node_id}`);
       if (stderr) throw new Error(stderr);
-      const ps: ProcessModel = (await this.getFindProcess(result?.node_id)) as ProcessModel;
+      const ps: ProcessPM2 = (await this.getFindProcess(result?.node_id)) as ProcessPM2;
 
       //@ts-ignore
       await this.setStatusProcess(result.deployment.id, ps.status, prisma);
@@ -118,7 +118,7 @@ export class PM2Manager {
     try {
       const result = await this.getNameProcess(name, prisma);
 
-      const verify = (await this.getFindProcess(result?.node_id)) as ProcessModel;
+      const verify = (await this.getFindProcess(result?.node_id)) as ProcessPM2;
 
       if (verify) {
         throw new Error("The process is already instantiated");
@@ -126,7 +126,7 @@ export class PM2Manager {
 
       const { stdout, stderr } = await execAsync(`pm2 delete ${result?.node_id}`);
       if (stderr) throw new Error(stderr);
-      const ps: ProcessModel = (await this.getFindProcess(result?.node_id)) as ProcessModel;
+      const ps: ProcessPM2 = (await this.getFindProcess(result?.node_id)) as ProcessPM2;
 
       //@ts-ignore
       await this.setStatusProcess(result.deployment.id, StatusDeployment.pending, prisma);
@@ -137,9 +137,9 @@ export class PM2Manager {
     }
   }
 
-  private static async getFindProcess(name: string | null = null): Promise<ProcessModel[] | ProcessModel | null> {
+  private static async getFindProcess(name: string | null = null): Promise<ProcessPM2[] | ProcessPM2 | null> {
     try {
-      const temppm2: ProcessModel[] = await this.listProcesses();
+      const temppm2: ProcessPM2[] = await this.listProcesses();
 
       return name ? temppm2.find((x) => x.name === name) || null : temppm2;
     } catch (error) {

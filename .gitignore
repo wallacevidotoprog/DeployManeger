@@ -51,3 +51,4 @@ testem.log
 .DS_Store
 Thumbs.db
 backend--nodejs/DEPLOY/*
+backend--nodejs/prisma/db/dev.db
