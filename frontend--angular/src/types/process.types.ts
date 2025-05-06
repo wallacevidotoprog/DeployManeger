@@ -1,6 +1,5 @@
-import { StatusDeployment } from "../enum/db.enum";
-import { ProjectModel } from "../models/db.modal";
-
+import { StatusDeployment } from '../enum/db.enum';
+import { ProjectModel } from '../models/db.modal';
 
 export type ProcessPM2 = {
   id: number;
@@ -9,8 +8,12 @@ export type ProcessPM2 = {
   cpu: number;
   memory: number;
 };
-
+export type OS = {
+  totalmem: number;
+  freemem: number;
+};
 export type ProcessModal = {
   process: ProcessPM2;
   db: ProjectModel;
+  os: OS;
 };

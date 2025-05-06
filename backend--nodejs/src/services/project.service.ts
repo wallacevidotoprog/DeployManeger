@@ -9,6 +9,8 @@ import { ResponseApi } from "../utils/response-api";
 import { ReturnGitClone } from "../utils/returtGihub";
 import { GitHubService } from "./github.service";
 import { PM2Manager } from "./pm2.service";
+import os from 'os';
+
 dotenv.config();
 
 class ProjectService {
@@ -110,6 +112,10 @@ class ProjectService {
         return {
           process: processes.find((x) => x.name === data.node_id),
           db: data,
+          os: {
+            totalmem : os.totalmem(),
+            freemem : os.freemem(),
+          }
         } as ProcessModal;
       });
 

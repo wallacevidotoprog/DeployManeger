@@ -45,7 +45,7 @@
               <td>
                 <div class="resource-bar">
                   <div class="memory-bar" 
-                       [style.width.%]="(item.process.memory / item.process.memory/2) * 100">
+                       [style.width.%]="(item.os.freemem / item.os.totalmem) * 100">
                   </div>
                   <span>{{ item.process.memory / 1048576 | number:'1.2-2' }} MB</span>
                 </div>
