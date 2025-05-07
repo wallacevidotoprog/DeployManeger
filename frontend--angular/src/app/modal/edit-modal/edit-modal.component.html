@@ -1,0 +1,34 @@
+<div *ngIf="show" class="modal" [ngStyle]="{'top.px': modalPosition.y, 'left.px': modalPosition.x}">
+  <div class="modal-header" (mousedown)="startDrag($event)">
+    <span>Edit .env File</span>
+    <button (click)="cancel.emit()">&times;</button>
+  </div>
+
+  <div class="modal-body">
+    <div class="tabs">
+      <button [class.active]="activeTab === 'text'" (click)="switchTab('text')">Texto</button>
+      <button [class.active]="activeTab === 'form'" (click)="switchTab('form')">Formulário</button>
+    </div>
+
+    <div class="import-file">
+      <input type="file" accept=".env" (change)="importEnvFile($event)" />
+    </div>
+
+    <div *ngIf="activeTab === 'text'">
+      <textarea [(ngModel)]="content" rows="15" class="env-textarea"></textarea>
+    </div>
+
+    <div *ngIf="activeTab === 'form'">
+      <div class="form-row" *ngFor="let item of formItems; let i = index">
+        <input [(ngModel)]="item.key" placeholder="KEY" />
+        <input [(ngModel)]="item.value" placeholder="VALUE" />
+      </div>
+      <button class="add-btn" (click)="addFormItem()">+ Adicionar linha</button>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button (click)="cancel.emit()">Cancelar</button>
+    <button (click)="onSave()">Salvar</button>
+  </div>
+</div>

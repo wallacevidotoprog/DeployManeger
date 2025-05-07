@@ -1,0 +1,26 @@
+<div class="project-list">
+  <div *ngFor="let item of items" class="item" [class.directory]="isDirectory(item)" [class.file]="!isDirectory(item)">
+    <div class="item-header" (click)="toggleExpand(item)">
+      <span class="icon">
+        <ng-container *ngIf="level === 0">
+          <button (click)="openSettings(isFileRaiz(item))" class="config-button">⚙️</button>
+        </ng-container>
+        <span *ngIf="isDirectory(item)">
+          {{ isExpanded(item) ? "📂" : "📁" }}
+        </span>
+
+        <span *ngIf="!isDirectory(item)">📄</span>
+      </span>
+
+      <span class="name">{{ item.name }}</span>
+
+      <span *ngIf="isFileWithSize(item)" class="file-info">
+        <span class="size">{{ formatSize(item.size ?? 0) }}</span>
+      </span>
+    </div>
+
+    <div *ngIf="isDirectory(item) && isExpanded(item) && item.children" class="children">
+      <app-project-list-path [items]="item.children" [level]="level + 1" [parentPath]="item.path"> </app-project-list-path>
+    </div>
+  </div>
+</div>

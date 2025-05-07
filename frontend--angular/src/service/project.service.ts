@@ -13,9 +13,36 @@ import { ProcessModal } from '../types/process.types';
 export class ProjectService {
   private http = inject(HttpClient);
 
-  getAllProject(): Observable<ResponseApi> {
+  getAllProjectProcess(): Observable<ResponseApi> {
     return this.http
       .get<ResponseApi>(`${environment.apiUrl}project/processes`, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          if (response.status === HttpStatus.OK) {
+            return {
+              status: response.status,
+              data: response.body?.data
+            } as ResponseApi;
+          } else {
+            const errorMessage = response.body as ResponseApi;
+            return {
+              status: response.status,
+              message: errorMessage.message,
+            } as ResponseApi;
+          }
+        })
+      );
+  }
+  getAllProject(): Observable<ResponseApi> {
+    return this.http
+      .get<ResponseApi>(`${environment.apiUrl}project/path-list`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',

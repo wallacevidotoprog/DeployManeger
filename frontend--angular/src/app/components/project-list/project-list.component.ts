@@ -29,7 +29,7 @@ export class ProjectListComponent {
   }
 
   getAllProject() {
-    this.projectService.getAllProject().subscribe({
+    this.projectService.getAllProjectProcess().subscribe({
       next: (value) => {
         this.dataList = value.data as ProcessModal[];
       },

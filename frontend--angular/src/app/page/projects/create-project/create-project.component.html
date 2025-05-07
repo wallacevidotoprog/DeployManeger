@@ -1,0 +1,35 @@
+<div class="project-layout">
+  <div class="project-list" [class.shifted]="selectedProject">
+    <app-project-list-path [items]="projectsData" (configProject)="handleConfigProject($event)" />
+  </div>
+
+  <div class="project-settings" *ngIf="selectedProject">
+    <div class="settings-header">
+      <button class="back-btn" (click)="closeSettings()">⬅️ Voltar</button>
+      <h2>{{ selectedProject.name }}</h2>
+    </div>
+
+    <div class="settings-actions">
+        <div>
+          <div *ngIf="listEnv">
+            <ul>
+              @for (item of listEnv; track $index) {
+                <li class="env-item">
+                  {{ item.name }}
+                  <button class="edit-btn" (click)="openEditModal(item)">✏️</button>
+                </li>
+              }
+            </ul>
+          </div>
+          <button class="action-btn" (click)="generateEnvFile()">📄 Generate .env</button>
+        </div>
+        <button class="action-btn" (click)="addToPM2()">⚙️ Include in PM2</button>
+      </div>
+  </div>
+</div>
+<app-edit-modal
+  [show]="showEditModal"
+  [content]="editingContent"
+  (cancel)="closeEditModal()"
+  (save)="onSaveEdit($event)"/>
+<!-- <app-project-list-path [items]="projectsData" [level]="0" [parentPath]="''" /> -->

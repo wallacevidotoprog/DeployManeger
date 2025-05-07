@@ -26,8 +26,9 @@
           </tr>
         </thead>
         <tbody>
-          @for (item of dataList; track item.process.id) {
-            <tr>
+          @for (item of dataList; track item?.process?.id ?? -1) {
+            
+            <tr *ngIf="item?.process">
               <td>#{{item.process.id}}</td>
               <td>{{item.db.name }}</td>
               <td>{{item.process.name}}</td>

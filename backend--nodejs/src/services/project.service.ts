@@ -10,6 +10,7 @@ import { ReturnGitClone } from "../utils/returtGihub";
 import { GitHubService } from "./github.service";
 import { PM2Manager } from "./pm2.service";
 import os from 'os';
+import path from "path";
 
 dotenv.config();
 
@@ -84,16 +85,53 @@ class ProjectService {
         );
         return;
       }
-      const itens = await fs
-        .readdirSync(this.deployDir, { withFileTypes: true })
-        .filter((item) => item.isDirectory)
-        .map((item) => item.name);
+      const getDirectoryStructure = (dirPath: string, basePath = '') => {
+        const items = fs.readdirSync(dirPath, { withFileTypes: true });
+        const result: any[] = [];
 
-      res.status(HttpStatus.OK).json(
-        ResponseApi.response({
-          data: itens,
-        })
-      );
+        for (const item of items) {
+            const fullPath = path.join(dirPath, item.name);
+            const relativePath = basePath ? path.join(basePath, item.name) : item.name;
+
+            if (item.isDirectory()) {
+                result.push({
+                    name: item.name,
+                    path: relativePath,
+                    type: 'directory',
+                    children: getDirectoryStructure(fullPath, relativePath)
+                });
+            } else if (item.isFile()) {
+                const stats = fs.statSync(fullPath);
+                result.push({
+                    name: item.name,
+                    path: relativePath,
+                    type: 'file',
+                    size: stats.size,
+                    modified: stats.mtime
+                });
+            }
+        }
+
+        return result;
+    };
+    const directoryStructure = getDirectoryStructure(this.deployDir);
+
+        res.status(HttpStatus.OK).json(
+            ResponseApi.response({
+                data: directoryStructure,
+            })
+        );
+
+      // const itens = await fs
+      //   .readdirSync(this.deployDir, { withFileTypes: true })
+      //   .filter((item) => item.isDirectory)
+      //   .map((item) => item.name);
+
+      // res.status(HttpStatus.OK).json(
+      //   ResponseApi.response({
+      //     data: itens,
+      //   })
+      // );
     } catch (error) {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
         ResponseApi.response({

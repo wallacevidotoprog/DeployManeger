@@ -3,13 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
-import { ProjectListComponent } from '../../components/project-list/project-list.component';
-import { AddNewProjectComponent } from './add-new-project/add-new-project.component';
+import { RouterModule } from '@angular/router';
+import { ProjectListComponent } from '../../../components/project-list/project-list.component';
 
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, ProjectListComponent,AddNewProjectComponent],
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, ProjectListComponent, RouterModule, ProjectListComponent],
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.scss'],
 })
