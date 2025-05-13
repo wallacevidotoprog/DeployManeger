@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authMiddleware } from "../middlewares/authMiddleware";
 import { validateDto } from "../middlewares/validation.middleware";
-import { ProjectValidator } from "../models/project/project.dto";
+import { FileActionValidator, ProjectValidator } from "../models/project/project.dto";
 import ProjectService from "../services/project.service";
 
 const routerProject = Router();
@@ -9,6 +9,10 @@ const routerProject = Router();
 routerProject.post("/import", authMiddleware, validateDto(ProjectValidator), ProjectService.registerProject.bind(ProjectService));
 
 routerProject.get("/path-list", authMiddleware, ProjectService.pathList.bind(ProjectService));
+
+routerProject.get("/get-file", authMiddleware, ProjectService.getFile.bind(ProjectService));
+
+routerProject.post("/set-file", authMiddleware,validateDto(FileActionValidator), ProjectService.setFile.bind(ProjectService));
 
 routerProject.get("/processes", authMiddleware, ProjectService.processList.bind(ProjectService));
 

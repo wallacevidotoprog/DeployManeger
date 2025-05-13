@@ -28,8 +28,12 @@
   </div>
 </div>
 <app-edit-modal
+ [activeTab]="activeTab"
   [show]="showEditModal"
   [content]="editingContent"
+  [setContent]="setContent"
   (cancel)="closeEditModal()"
   (save)="onSaveEdit($event)"/>
+
+ 
 <!-- <app-project-list-path [items]="projectsData" [level]="0" [parentPath]="''" /> -->

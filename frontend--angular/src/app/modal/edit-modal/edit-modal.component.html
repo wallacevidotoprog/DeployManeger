@@ -5,10 +5,6 @@
   </div>
 
   <div class="modal-body">
-    <div class="tabs">
-      <button [class.active]="activeTab === 'text'" (click)="switchTab('text')">Texto</button>
-      <button [class.active]="activeTab === 'form'" (click)="switchTab('form')">Formulário</button>
-    </div>
 
     <div class="import-file">
       <input type="file" accept=".env" (change)="importEnvFile($event)" />
@@ -18,17 +14,18 @@
       <textarea [(ngModel)]="content" rows="15" class="env-textarea"></textarea>
     </div>
 
-    <div *ngIf="activeTab === 'form'">
-      <div class="form-row" *ngFor="let item of formItems; let i = index">
+    <div *ngIf="activeTab === 'env'">
+      <div class="form-row" *ngFor="let item of envDecoder; let i = index">
         <input [(ngModel)]="item.key" placeholder="KEY" />
         <input [(ngModel)]="item.value" placeholder="VALUE" />
+        <button (click)="deleteKeyEnv(item.key)">🗑️</button>
       </div>
-      <button class="add-btn" (click)="addFormItem()">+ Adicionar linha</button>
+      <button class="add-btn" (click)="addFormItem()">+ Add line</button>
     </div>
   </div>
 
   <div class="modal-footer">
-    <button (click)="cancel.emit()">Cancelar</button>
-    <button (click)="onSave()">Salvar</button>
+    <button (click)="cancel.emit()">Cancel</button>
+    <button (click)="onSave()">Save</button>
   </div>
 </div>

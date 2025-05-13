@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { EnvDecoder } from '../../../types/env.type';
 
 @Component({
-  imports: [FormsModule,CommonModule],
+  imports: [FormsModule, CommonModule],
   selector: 'app-edit-modal',
   templateUrl: './edit-modal.component.html',
   styleUrls: ['./edit-modal.component.scss'],
@@ -11,25 +12,29 @@ import { FormsModule } from '@angular/forms';
 export class EditModalComponent {
   @Input() show = false;
   @Input() content = '';
+  @Input() set setContent(value: string) {
+    if (value) this.content = value;
+    this.parseEnv(this.content);
+  }
   @Output() cancel = new EventEmitter<void>();
   @Output() save = new EventEmitter<string>();
 
-  activeTab: 'text' | 'form' = 'text';
-  formItems: { key: string; value: string }[] = [];
+  @Input() activeTab: 'text' | 'env' = 'env';
 
   drag = { active: false, offsetX: 0, offsetY: 0 };
   modalPosition = { x: 100, y: 100 };
+  envDecoder: EnvDecoder[] = [];
 
   ngOnInit() {
-    if (this.content) this.formItems = this.parseEnv(this.content);
+    if (this.content) this.parseEnv(this.content);
   }
 
-  switchTab(tab: 'text' | 'form') {
+  switchTab(tab: 'text' | 'env') {
     this.activeTab = tab;
   }
 
   onSave() {
-    const result = this.activeTab === 'form' ? this.toEnv(this.formItems) : this.content;
+    const result = this.activeTab === 'env' ? this.toEnv(this.envDecoder) : this.content;
     this.save.emit(result);
   }
 
@@ -40,33 +45,43 @@ export class EditModalComponent {
 
     const reader = new FileReader();
     reader.onload = () => {
-      this.content = reader.result as string;
-      this.formItems = this.parseEnv(this.content);
-      this.activeTab = 'form';
+      this.parseEnv(reader.result as string, false);
+      this.activeTab = 'env';
     };
     reader.readAsText(file);
   }
 
-  parseEnv(text: string): { key: string; value: string }[] {
-    return text.split('\n')
-      .filter(line => line.trim() && !line.startsWith('#'))
-      .map(line => {
+  parseEnv(text: string, newEnv: boolean = true) {
+    if (newEnv) {
+      this.envDecoder = [];
+    }
+    text
+      .split('\n')
+      .filter((line) => line.trim() && !line.startsWith('#'))
+      .map((line) => {
         const [key, ...rest] = line.split('=');
-        return { key: key.trim(), value: rest.join('=').trim() };
+        this.envDecoder.push({
+          key: key.trim(),
+          value: rest.join('=').trim(),
+        });
       });
   }
 
-  toEnv(items: { key: string; value: string }[]): string {
+  toEnv(items: EnvDecoder[]): string {
     return items
-      .filter(item => item.key)
-      .map(item => `${item.key}=${item.value}`)
+      .filter((item) => item.key)
+      .map((item) => `${item.key.toLocaleUpperCase()}=${item.value}`)
       .join('\n');
   }
 
   addFormItem() {
-    this.formItems.push({ key: '', value: '' });
+    this.envDecoder.push({ key: '', value: '' });
   }
-
+  deleteKeyEnv(key: string) {
+    this.envDecoder = this.envDecoder.filter(x => x.key != key)
+    console.log(key,this.envDecoder);
+    
+  }
   @HostListener('document:keydown.control.s', ['$event'])
   onCtrlS(event: KeyboardEvent) {
     event.preventDefault();

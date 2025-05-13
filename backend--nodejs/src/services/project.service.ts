@@ -2,15 +2,17 @@ import { PrismaClient, StatusDeployment } from "@prisma/client";
 import dotenv from "dotenv";
 import { Request, Response } from "express";
 import fs from "fs";
+import { writeFile } from "fs/promises";
+import os from "os";
+import path from "path";
 import { ProcessModal } from "../@types/process.types";
 import { ProjectDtoCreate } from "../models/project/project.dto";
+import { CREATE } from "../utils/actions";
 import { HttpStatus } from "../utils/HttpStatus";
 import { ResponseApi } from "../utils/response-api";
 import { ReturnGitClone } from "../utils/returtGihub";
 import { GitHubService } from "./github.service";
 import { PM2Manager } from "./pm2.service";
-import os from 'os';
-import path from "path";
 
 dotenv.config();
 
@@ -85,42 +87,42 @@ class ProjectService {
         );
         return;
       }
-      const getDirectoryStructure = (dirPath: string, basePath = '') => {
+      const getDirectoryStructure = (dirPath: string, basePath = "") => {
         const items = fs.readdirSync(dirPath, { withFileTypes: true });
         const result: any[] = [];
 
         for (const item of items) {
-            const fullPath = path.join(dirPath, item.name);
-            const relativePath = basePath ? path.join(basePath, item.name) : item.name;
+          const fullPath = path.join(dirPath, item.name);
+          const relativePath = basePath ? path.join(basePath, item.name) : item.name;
 
-            if (item.isDirectory()) {
-                result.push({
-                    name: item.name,
-                    path: relativePath,
-                    type: 'directory',
-                    children: getDirectoryStructure(fullPath, relativePath)
-                });
-            } else if (item.isFile()) {
-                const stats = fs.statSync(fullPath);
-                result.push({
-                    name: item.name,
-                    path: relativePath,
-                    type: 'file',
-                    size: stats.size,
-                    modified: stats.mtime
-                });
-            }
+          if (item.isDirectory()) {
+            result.push({
+              name: item.name,
+              path: relativePath,
+              type: "directory",
+              children: getDirectoryStructure(fullPath, relativePath),
+            });
+          } else if (item.isFile()) {
+            const stats = fs.statSync(fullPath);
+            result.push({
+              name: item.name,
+              path: relativePath,
+              type: "file",
+              size: stats.size,
+              modified: stats.mtime,
+            });
+          }
         }
 
         return result;
-    };
-    const directoryStructure = getDirectoryStructure(this.deployDir);
+      };
+      const directoryStructure = getDirectoryStructure(this.deployDir);
 
-        res.status(HttpStatus.OK).json(
-            ResponseApi.response({
-                data: directoryStructure,
-            })
-        );
+      res.status(HttpStatus.OK).json(
+        ResponseApi.response({
+          data: directoryStructure,
+        })
+      );
 
       // const itens = await fs
       //   .readdirSync(this.deployDir, { withFileTypes: true })
@@ -141,6 +143,66 @@ class ProjectService {
     }
   }
 
+  async getFile(req: Request, res: Response): Promise<void> {
+    try {
+      const filename = req.query.filename as string;
+
+      if (!filename) {
+        res.status(HttpStatus.NOT_FOUND).json(
+          ResponseApi.response({
+            message: "Filename is required",
+          })
+        );
+        return;
+      }
+
+      if (!fs.existsSync(this.deployDir) || !fs.existsSync(path.join(this.deployDir, filename))) {
+        res.status(HttpStatus.NOT_FOUND).json(
+          ResponseApi.response({
+            message: "Empty folder or file",
+          })
+        );
+        return;
+      }
+
+      const resultFile = await fs.readFileSync(path.join(this.deployDir, filename));
+      res.status(HttpStatus.OK).json(
+        ResponseApi.response({
+          data: resultFile,
+        })
+      );
+    } catch (error) {
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
+        ResponseApi.response({
+          message: (error as Error)?.message || "Erro desconhecido",
+        })
+      );
+    }
+  }
+  async setFile(req: Request, res: Response): Promise<void> {
+    try {
+      if (!fs.existsSync(this.deployDir)) {
+        res.status(HttpStatus.NOT_FOUND).json(
+          ResponseApi.response({
+            message: "Empty folder",
+          })
+        );
+        return;
+      }
+      const { action, filename, pathfile, data } = req.body;
+
+      await writeFile(path.join(this.deployDir, pathfile, filename), data, { encoding: "utf-8" });
+      res.status(action === CREATE ? HttpStatus.CREATED : HttpStatus.OK).send();
+
+    } catch (error) {
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
+        ResponseApi.response({
+          message: (error as Error)?.message || "Erro desconhecido",
+        })
+      );
+    }
+  }
+
   async processList(req: Request, res: Response): Promise<void> {
     try {
       const processes = await PM2Manager.listProcesses();
@@ -151,9 +213,9 @@ class ProjectService {
           process: processes.find((x) => x.name === data.node_id),
           db: data,
           os: {
-            totalmem : os.totalmem(),
-            freemem : os.freemem(),
-          }
+            totalmem: os.totalmem(),
+            freemem: os.freemem(),
+          },
         } as ProcessModal;
       });
 
