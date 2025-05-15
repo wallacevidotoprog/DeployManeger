@@ -8,11 +8,10 @@ import { ProjectService } from '../../../../service/project.service';
 import { Child, ListProjectPath, SetFileProject } from '../../../../types/project.types';
 import { ProjectListPathComponent } from '../../../components/project-list-path/project-list-path.component';
 import { EditModalComponent } from '../../../modal/edit-modal/edit-modal.component';
-import { ModalViewerCodeComponent } from '../../../modal/modal-viewer-code/modal-viewer-code.component';
 
 @Component({
   standalone: true, // Adicionar esta linha
-  imports: [CommonModule, FormsModule, FontAwesomeModule, ProjectListPathComponent, EditModalComponent, ],
+  imports: [CommonModule, FormsModule, FontAwesomeModule, ProjectListPathComponent, EditModalComponent],
   selector: 'app-create-project',
   templateUrl: './create-project.component.html',
   styleUrls: ['./create-project.component.scss'],
@@ -21,8 +20,6 @@ export class CreateProjectComponent implements OnInit {
   ngOnInit(): void {
     this.getAllProject();
   }
- 
-
 
   projectsData: ListProjectPath[] = [];
   selectedProject: ListProjectPath | null = null;
@@ -33,11 +30,30 @@ export class CreateProjectComponent implements OnInit {
   activeTab!: 'text' | 'env';
   setContent = '';
   pathSelected = '';
+scriptsMap: Record<string, Record<string, string>> = {};
+  
+objectKeys = Object.keys;
+
+objectEntries = (obj: Record<string, any>) =>
+  Object.entries(obj) as [string, any][];
 
   handleConfigProject(project: ListProjectPath) {
+    this.getPackage(project.name);
     this.selectedProject = project;
     this.listEnv = undefined;
     this.checkingEnvFile();
+  }
+
+  getPackage(nameFile: string) {
+    this.scriptsMap = {};
+    this.projectService.getPackage(nameFile).subscribe({
+      next: (value) => {
+        this.scriptsMap[nameFile] = value.data.scripts
+      },
+      error: (err) => {
+        this.tAlert.danger('Error', `Error fetching profile: ${err.error?.message || err.message}`, 5000);
+      },
+    });
   }
 
   closeSettings() {
@@ -72,7 +88,10 @@ export class CreateProjectComponent implements OnInit {
 
   addToPM2() {
     this.tAlert.info('Adicionando ao PM2: ' + this.selectedProject?.name);
-    // lógica de chamada à API para PM2
+
+    if (this.selectedProject) {
+      console.log('CreateProjectComponent=>selectedProject', this.selectedProject);
+    }
   }
 
   checkingEnvFile() {
@@ -139,5 +158,9 @@ export class CreateProjectComponent implements OnInit {
     this.closeEditModal();
   }
 
+
+  runScript(path: string, scriptName: string) {
+  console.log('runScript',path,scriptName);
   
+}
 }

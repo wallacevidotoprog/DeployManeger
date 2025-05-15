@@ -6,34 +6,62 @@
   <div class="project-settings" *ngIf="selectedProject">
     <div class="settings-header">
       <button class="back-btn" (click)="closeSettings()">⬅️ Voltar</button>
-      <h2>{{ selectedProject.name }}</h2>
+      <p>{{ selectedProject.name }}</p>
     </div>
 
     <div class="settings-actions">
-        <div>
-          <div *ngIf="listEnv">
-            <ul>
-              @for (item of listEnv; track $index) {
-                <li class="env-item">
-                  {{ item.name }}
-                  <button class="edit-btn" (click)="openEditModal(item)">✏️</button>
-                </li>
-              }
-            </ul>
-          </div>
-          <button class="action-btn" (click)="generateEnvFile()">📄 Generate .env</button>
+      <div class="list-ssetting">
+        <h3>📄 All Loaded .ENV</h3>
+        <div *ngIf="listEnv" class="all-scripts">
+          <ul>
+            @for (item of listEnv; track $index) {
+            <li class="env-item">
+              {{ item.name }}
+              <button class="edit-btn" (click)="openEditModal(item)">✏️</button>
+            </li>
+            }
+          </ul>
         </div>
-        <button class="action-btn" (click)="addToPM2()">⚙️ Include in PM2</button>
+        <button class="action-btn" (click)="generateEnvFile()">📄 Generate .env</button>
       </div>
-  </div>
-</div>
-<app-edit-modal
- [activeTab]="activeTab"
-  [show]="showEditModal"
-  [content]="editingContent"
-  [setContent]="setContent"
-  (cancel)="closeEditModal()"
-  (save)="onSaveEdit($event)"/>
+      <div class="list-setting">
+        <div class="all-scripts">
+          <h3>📦 All Loaded Scripts</h3>
 
- 
-<!-- <app-project-list-path [items]="projectsData" [level]="0" [parentPath]="''" /> -->
+          <ul *ngIf="objectEntries(scriptsMap).length > 0; else noScripts">
+            @for (entry of objectEntries(scriptsMap); track entry[0]) {
+            <li>
+              <strong>{{ entry[0] }}</strong>
+              <ul>
+                <li *ngFor="let key of objectKeys(entry[1])">
+                  <code>{{ key }}</code
+                  >: {{ entry[1][key] }}
+                  <button (click)="runScript(entry[0], key)">▶️</button>
+                </li>
+              </ul>
+            </li>
+            }
+          </ul>
+
+          <ng-template #noScripts>
+            <p>📭 No scripts loaded yet.</p>
+          </ng-template>
+        </div>
+
+        <div class="list-setting">
+          <button class="action-btn" (click)="addToPM2()">⚙️ Include in PM2</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-edit-modal
+    [activeTab]="activeTab"
+    [show]="showEditModal"
+    [content]="editingContent"
+    [setContent]="setContent"
+    (cancel)="closeEditModal()"
+    (save)="onSaveEdit($event)"
+  />
+
+  <!-- <app-project-list-path [items]="projectsData" [level]="0" [parentPath]="''" /> -->
+</div>

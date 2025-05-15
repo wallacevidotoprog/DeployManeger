@@ -124,4 +124,34 @@ export class ProjectService {
         })
       );
   }
+
+  getPackage(pathFile: string): Observable<ResponseApi> {
+    return this.http
+      .get<ResponseApi>(`${environment.apiUrl}project/package`, {
+        params: { name: pathFile },
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+
+        withCredentials: true,
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          if (response.status === HttpStatus.OK) {
+            return {
+              status: response.status,
+              data: response.body?.data,
+            } as ResponseApi;
+          } else {
+            const errorMessage = response.body as ResponseApi;
+            return {
+              status: response.status,
+              message: errorMessage.message,
+            } as ResponseApi;
+          }
+        })
+      );
+  }
 }

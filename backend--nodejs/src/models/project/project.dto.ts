@@ -42,6 +42,20 @@ export class FileActionValidator {
   data!: string;
 }
 
+export class ProcessPm2Start {
+  @IsString()
+  name!: string;
+
+  @IsString()
+  filename!: string;
+
+  @IsString()
+  pathfile!: string;
+
+  @IsString()
+  data!: string;
+}
+
 export interface ProjectDtoCreate extends Omit<ProjectModel, "id" | "createAt" | "updateAt"> {}
 
 export interface ProjectDtoUpdate extends Partial<ProjectDtoCreate> {}

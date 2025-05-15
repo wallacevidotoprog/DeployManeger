@@ -179,6 +179,7 @@ class ProjectService {
       );
     }
   }
+
   async setFile(req: Request, res: Response): Promise<void> {
     try {
       if (!fs.existsSync(this.deployDir)) {
@@ -193,7 +194,6 @@ class ProjectService {
 
       await writeFile(path.join(this.deployDir, pathfile, filename), data, { encoding: "utf-8" });
       res.status(action === CREATE ? HttpStatus.CREATED : HttpStatus.OK).send();
-
     } catch (error) {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
         ResponseApi.response({
@@ -334,6 +334,39 @@ class ProjectService {
       res.status(HttpStatus.OK).json(
         ResponseApi.response({
           data: result,
+        })
+      );
+    } catch (error) {
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
+        ResponseApi.response({
+          message: (error as Error).message,
+        })
+      );
+    }
+  }
+
+  async getPackage(req: Request, res: Response): Promise<void> {
+    try {
+      const name = req.query.name as string;
+
+      if (!fs.existsSync(this.deployDir)) {
+        res.status(HttpStatus.NOT_FOUND).json(
+          ResponseApi.response({
+            message: "Empty folder",
+          })
+        );
+        return;
+      }
+
+      const tt = path.join(this.deployDir, name,'package.json');
+      console.log(tt);
+      
+      const content = fs.readFileSync(tt, "utf-8");
+      const json = JSON.parse(content);
+
+      res.status(HttpStatus.OK).json(
+        ResponseApi.response({
+          data: json,
         })
       );
     } catch (error) {

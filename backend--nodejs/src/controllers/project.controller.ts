@@ -24,4 +24,6 @@ routerProject.post("/stop", authMiddleware, ProjectService.stopProcess.bind(Proj
 
 routerProject.post("/delete", authMiddleware, ProjectService.deleteProcess.bind(ProjectService));
 
+routerProject.get("/package", authMiddleware, ProjectService.getPackage.bind(ProjectService));
+
 export default routerProject;

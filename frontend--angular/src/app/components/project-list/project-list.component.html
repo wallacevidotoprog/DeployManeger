@@ -2,81 +2,71 @@
 <div class="processes-dashboard">
   <div class="dashboard-header">
     <h2 class="dashboard-title">Process Deployment Dashboard</h2>
-    <button class="refresh-button" (click)="getAllProject()">
-      <i class="fas fa-sync-alt"></i> Refresh Data
-    </button>
+    <button class="refresh-button" (click)="getAllProject()"><i class="fas fa-sync-alt"></i> Refresh Data</button>
   </div>
 
   <div class="table-container">
     @if (loading) {
-      <div class="loading-spinner">
-        <i class="fas fa-spinner fa-spin"></i> Loading processes...
-      </div>
+    <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading processes...</div>
     } @else {
-      <table class="wide-process-table">
-        <thead>
-          <tr>
-            <th class="col-id">ID</th>
-            <th class="col-node">Name</th>
-            <th class="col-name">Process</th>
-            <th class="col-status">Status</th>
-            <th class="col-resources">CPU</th>
-            <th class="col-resources">Memory</th>
-            <th class="col-actions">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (item of dataList; track item?.process?.id ?? -1) {
-            
-            <tr *ngIf="item?.process">
-              <td>#{{item.process.id}}</td>
-              <td>{{item.db.name }}</td>
-              <td>{{item.process.name}}</td>
-              <td>
-                <span class="status-badge" [ngClass]="getStatusClass(item.process.status)">
-                  {{item.process.status}}
-                </span>
-              </td>
-              <td>
-                <div class="resource-bar">
-                  <div class="cpu-bar" [style.width.%]="item.process.cpu"></div>
-                  <span>{{item.process.cpu}}%</span>
-                </div>
-              </td>
-              <td>
-                <div class="resource-bar">
-                  <div class="memory-bar" 
-                       [style.width.%]="(item.os.freemem / item.os.totalmem) * 100">
-                  </div>
-                  <span>{{ item.process.memory / 1048576 | number:'1.2-2' }} MB</span>
-                </div>
-                
-              </td>
-              <td>
-                <button class="config-button" (click)="configureProcess(item)" title="Configure">
-                  <i class="fas fa-cog"></i>
-                </button>
-                @if (item.process.status === StatusDeployment.errored) {
-                  <button class="restart-button" (click)="restartProcess(item)" title="Restart">
-                    <i class="fas fa-redo"></i>
-                  </button>
-                }
-                @if (showAdminControls(item)) {
-                  <button class="admin-button" (click)="adminAction(item)" title="Admin Action">
-                    <i class="fas fa-shield-alt"></i>
-                  </button>
-                }
-              </td>
-            </tr>
-          } @empty {
-            <tr>
-              <td colspan="7" class="no-data">
-                No processes found
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+    <table class="wide-process-table">
+      <thead>
+        <tr>
+          <th class="col-id">ID</th>
+          <th class="col-node">Name</th>
+          <th class="col-name">Process</th>
+          <th class="col-status">Status</th>
+          <th class="col-resources">CPU</th>
+          <th class="col-resources">Memory</th>
+          <th class="col-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of dataList; track item?.process?.id ?? -1) {
+        <!-- *ngIf="item?.process" -->
+        <tr>
+          <td>#{{ item?.process?.id ?? "-1" }}</td>
+          <td>{{ item.db.name }}</td>
+          <td>{{ item?.process?.name ?? item.db.node_id }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="getStatusClass(item?.process?.status ?? StatusDeployment.pending)">
+              {{ item?.process?.status ?? "pending" }}
+            </span>
+          </td>
+          <td>
+            <div class="resource-bar">
+              <div class="cpu-bar" [style.width.%]="item?.process?.cpu ?? 0"></div>
+              <span>{{ item?.process?.cpu ?? 0 }}%</span>
+            </div>
+          </td>
+          <td>
+            <div class="resource-bar">
+              <div class="memory-bar" [style.width.%]="(item.os.freemem / item.os.totalmem) * 100"></div>
+              <span>{{ item?.process?.memory ?? 0 / 1048576 | number : "1.2-2" }} MB</span>
+            </div>
+          </td>
+          <td>
+            <button class="config-button" (click)="configureProcess(item)" title="Configure">
+              <i class="fas fa-cog"></i>
+            </button>
+            <!-- @if (item.process.status === StatusDeployment.errored) {
+            <button class="restart-button" (click)="restartProcess(item)" title="Restart">
+              <i class="fas fa-redo"></i>
+            </button>
+            } @if (showAdminControls(item)) {
+            <button class="admin-button" (click)="adminAction(item)" title="Admin Action">
+              <i class="fas fa-shield-alt"></i>
+            </button>
+            } -->
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="7" class="no-data">No processes found</td>
+        </tr>
+        }
+      </tbody>
+    </table>
     }
   </div>
 </div>

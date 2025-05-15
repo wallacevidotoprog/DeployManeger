@@ -19,7 +19,7 @@ export class ProjectListComponent {
   private projectService = inject(ProjectService);
   private tAlert = inject(NgToastService);
   dataList!: ProcessModal[];
-  loading = false;
+  loading = false; 
   StatusDeployment = StatusDeployment;
   RoleUser = RoleUser;
 
@@ -40,23 +40,20 @@ export class ProjectListComponent {
       },
     });
   }
-  getStatusClass(status: StatusDeployment): string {
-    const statusString = status.toString();
+  getStatusClass(status: StatusDeployment): string {    
+    const statusString = status ? status.toString(): 'pending';
     return statusString.toLowerCase();
   }
   configureProcess(process: ProcessModal) {
     console.log('Configuring process:', process);
-    // Add your configuration logic here
   }
 
   restartProcess(process: ProcessModal) {
     console.log('Restarting process:', process);
-    // Add restart logic here
   }
 
   adminAction(process: ProcessModal) {
     console.log('Admin action for process:', process);
-    // Add admin-specific logic here
   }
 
   showAdminControls(process: ProcessModal): boolean {
